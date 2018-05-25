@@ -15,14 +15,8 @@ def takeId(elem):
 
 conn = sqlite3.connect('coins.db')
 
-print('Calculadora de Bs a divisas.')
+print('Calculadora de Bs a divisas.\nObteniendo valores de las monedas...')
 
-
-'''
-Pedimos valor del Dolar
-'''
-bsToUsd = 1/float(input('Ingrese valor del Dolar en Bs: '))
-numBs = float(input('Cantidad de Bs: '))
 
 '''
 Obtenemos valores.
@@ -67,14 +61,30 @@ except Exception as e:
 
 
 '''
-Imprimimos valores, ordenados por ID
+Pedimos valor del Dolar
 '''
+bsToUsd = 1/float(input('Ingrese valor del Dolar en Bs: '))
+
+
+while True:
+
+    numBs = float(input('Cantidad de Bs: '))
+
+    '''
+    Imprimimos valores, ordenados por ID
+    '''
+    print('\n\nConversión:')
+    print('Dolar: {0:.2f}\n'.format(numBs*bsToUsd))
+    orderedCoins = collections.OrderedDict(sorted(coins.items(), key=takeId))
+
+
+    for t in orderedCoins.items():
+        coin = t[0]
+        print(coins[coin]['format'].format(coin, bsToCoin(bsToUsd, coins[coin]['usdToCoin'], numBs)))
+
+    continuar = input('¿Desea Continuar? (y/n): ')
+    if not continuar or continuar == 'n':
+        break
+
+
 conn.close()
-print('\n\nConversión:')
-print('Dolar: {0:.2f}\n'.format(numBs*bsToUsd))
-orderedCoins = collections.OrderedDict(sorted(coins.items(), key=takeId))
-
-
-for t in orderedCoins.items():
-    coin = t[0]
-    print(coins[coin]['format'].format(coin, bsToCoin(bsToUsd, coins[coin]['usdToCoin'], numBs)))
